@@ -48,7 +48,7 @@
             border: 2px solid rgb(255, 218, 218);
             background: rgb(248, 231, 231);
             border-radius: 5px;
-            height: 100px;
+            height: 140px;
             padding: 10px;
         }
 
@@ -77,9 +77,10 @@
 
         #selected {
             color: rgb(36, 182, 255);
+            font-size: 2em;
         }
 
-        button {
+        #spintawin {
             margin-top: 15px;
             padding: 5px 10px;
         }
@@ -87,7 +88,7 @@
     </style>
 
 </head>
-<body>
+<body onload="fillListContent()">
     <div class="container">
 
         <div class="header-wrapper">
@@ -98,16 +99,16 @@
 
             <div class="item name-list">
                 <ul>
-                    <li>Cloudy</li>
-                    <li>River</li>
-                    <li>Sami</li>
+                    <li id="1"> </li> <button id="plus1"> + </button> <span id="1w">0</span> <button id="minus1"> - </button>
+                    <li id="2"> </li> <button id="plus2"> + </button> <span id="2w">0</span> <button id="minus2"> - </button>
+                    <li id="3"> </li> <button id="plus3"> + </button> <span id="3w">0</span> <button id="minus3"> - </button>
                 </ul>
             </div>
 
             <div class="item named-wrapper">
                 <div class="selected-name">The winner is:</div>
                 <br>
-                <span id="selected">#</span>
+                <span id="selected">?</span>
                 <button id="spintawin">Select</button>
             </div>
 
@@ -116,22 +117,145 @@
 
     <script>
         const winner = document.getElementById('selected')
-        const button = document.getElementById('spintawin')
-        const nameList = [
+        const spintawin = document.getElementById('spintawin')
+        var randomCheck = null
+        let nameList = [
             ['Cloudy', 1],
             ['River', 1],
             ['Sami', 1]
         ]
 
+        const fillListContent = () => {
+            //I would generate this dynamically if my head didn't hurt bad
+            // todo: make this dynamically generate for different sized lists
+            const liOne = document.getElementById('1')
+            const liTwo = document.getElementById('2')
+            const liThree = document.getElementById('3')
+
+            liOne.innerHTML = `${nameList[0][0]}`
+            liTwo.innerHTML = `${nameList[1][0]}`
+            liThree.innerHTML = `${nameList[2][0]}`
+
+            const liOnew = document.getElementById('1w')
+            const liTwow = document.getElementById('2w')
+            const liThreew = document.getElementById('3w')
+
+            liOnew.innerHTML = `${nameList[0][1]}`
+            liTwow.innerHTML = `${nameList[1][1]}`
+            liThreew.innerHTML = `${nameList[2][1]}`
+        }
+
+        // Below is the ugliest least good code ever and not dynamic whatsoever but I'm trucking
+        // todo: make this less ugly
+        // "look at all those programs that could be 2 but its six" - Adam, watching me code, disappointed but amused
+
+        let plusOne = document.getElementById('plus1')
+        let minusOne = document.getElementById('minus1')
+        let plusTwo = document.getElementById('plus2')
+        let minusTwo = document.getElementById('minus2')
+        let plusThree = document.getElementById('plus3')
+        let minusThree = document.getElementById('minus3')
+
+        const incrementButtonOne = () => {
+            nameList[0][1] += 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[0][1])
+        }
+
+        const decrementButtonOne = () => {
+            if (nameList[0][1] === 0) {
+                return
+            }
+            nameList[0][1] -= 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[0][1])
+        }
+
+        const incrementButtonTwo = () => {
+            nameList[1][1] += 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[1][1])
+        }
+
+        const decrementButtonTwo = () => {
+            if (nameList[1][1] === 0) {
+                return
+            }
+            nameList[1][1] -= 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[1][1])
+        }
+
+        const incrementButtonThree = () => {
+            nameList[2][1] += 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[2][1])
+        }
+
+        const decrementButtonThree = () => {
+            if (nameList[2][1] === 0) {
+                return
+            }
+            nameList[2][1] -= 1
+            fillListContent()
+            console.log('The new weight is: ', nameList[2][1])
+        }
+
+        plusOne.addEventListener('click', incrementButtonOne)
+        minusOne.addEventListener('click', decrementButtonOne)
+        plusTwo.addEventListener('click', incrementButtonTwo)
+        minusTwo.addEventListener('click', decrementButtonTwo)
+        plusThree.addEventListener('click', incrementButtonThree)
+        minusThree.addEventListener('click', decrementButtonThree)
+
+        // Random weighted selection
+
+        const weightedSelection = () => {
+            let outtahat = []
+
+            nameList.map(item => {
+                //console.log('The name:', item[0])
+                //console.log('The weight:', item[1])
+
+                // do below task item[1] number of times
+
+                Array.from(Array(item[1])).forEach((x, i) => {
+                    outtahat.push(item[0])
+                }); 
+                
+                //console.log('New array:', outtahat)
+            })
+
+            return outtahat
+        }
+
         const randomSelection = () => {
-            const randomIndex = Math.floor(Math.random() * nameList.length);
-            const randomValue = nameList[randomIndex];
-            console.log(randomValue)
+            let hatArray = weightedSelection()
+            console.log(hatArray)
+            const randomIndex = Math.floor(Math.random() * hatArray.length);
+            const randomValue = hatArray[randomIndex];
+            //console.log(randomValue)
+            if (hatArray.length === 0) {
+                return 'nobody'
+            }
             return randomValue
         }
 
-        button.addEventListener('click', randomSelection)
+        const buttonPress = () => {
+            let randomValue = randomSelection()
+            //console.log('This is the new value:', randomValue)
+            //console.log('This is the last value', randomCheck)
+            if (randomValue === randomCheck) {
+                //console.log('redo')
+                buttonPress()
+                return
+            }
+            randomCheck = randomValue
+            //console.log('This is the value in check', randomCheck)
+            winner.innerHTML = `${randomValue}`
+        }
 
+        spintawin.addEventListener('click', buttonPress)
 
     </script>
 </body>
