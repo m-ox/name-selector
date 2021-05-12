@@ -1,0 +1,10 @@
+/*
+Random Person Selector:
+ Using HTML, CSS, and JS, build a UI that allows a user to randomly choose from a list of people
+   - Must render names from the list on screen
+   - Must be weighted and have an easy way to add / subtract weight
+   - Can't choose the same person twice in a row
+   - Randomly chosen should be rendered on the screen
+ - Try adding some animations (maybe a shuffle) for fun!
+
+*/
